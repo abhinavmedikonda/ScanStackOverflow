@@ -1,0 +1,100 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+<div class="page-height">
+    <div class="col-xs-3">
+        <ul style="font-size:20px">
+            <li>active-directory</li>
+            <li>ruby-on-rails</li>
+            <li>android</li>
+            <li>ios</li>
+            <li>ajax</li>
+            <li>azure</li>
+            <li>perl</li>
+            <li>shell</li>
+            <li>asp.net-mvc</li>
+        </ul>
+    </div>
+    <div class="col-xs-6">
+        <div class="blocks">
+            <div class="form-group block" style="min-width:200px">
+                <input type="text" class="form-control" style="text-align: center"/>
+                <button class="btn-primary btn-lg">Get</button>
+            </div>
+        </div>
+        <div class="blocks">
+            <div class="block">
+                <h1 id="1hour"></h1>
+            </div>
+            <div class="block">
+                <h1 id="6hour"></h1>
+            </div>
+            <div class="block">
+                <h1 id="24hour"></h1>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    window.onload = function () {
+        $("ul").on("click", "li", function () {
+            console.log($(this).text());
+            $("input").val($(this).text());
+            buttonClick();
+        });
+        $("button").click(function () { buttonClick();});
+
+        var buttonClick = function () {
+            console.log($("input").val());
+
+            var iteration = 1;
+            var items = 0;
+            var tag = $("input").val();
+            console.log(tag);
+
+            //$.get("https://api.stackexchange.com/2.2/search?page=" + iteration + "&pagesize=100&order=desc&sort=activity&tagged=" + tag + "&site=stackoverflow", function (response) {
+            //    console.log(response);
+            //    console.log(response.has_more);
+            //});
+
+            while (true) {
+                //$.get("https://api.stackexchange.com/2.2/search?page=" + iteration + "pagesize=100&order=desc&sort=activity&tagged=" + tag + "&site=stackoverflow", function (response) {
+                //console.log(response);
+                //if (response.has_more == true) {
+                if (iteration == 5) {
+                    break;
+                }
+                iteration++;
+                console.log(iteration);
+                console.log(Date.now().toString().slice(0, -3) - 3600);
+                //} else {
+                //    items = response.items.length;
+                //    break;
+                //}
+                //});
+            }
+
+            var nowSeconds = Date.now().toString().slice(0, -3);
+            var x = "https://api.stackexchange.com/2.2/search?page=1&pagesize=100&fromdate=" + (nowSeconds - 21600).toString() + "&order=desc&sort=activity&tagged=" + tag + "&site=stackoverflow";
+            console.log(x);
+
+            $.get("https://api.stackexchange.com/2.2/search?page=1&pagesize=100&fromdate=" + (nowSeconds - 3600).toString() + "&order=desc&sort=activity&tagged=" + tag + "&site=stackoverflow", function (response) {
+                console.log(response);
+                $("h1#1hour").text(response.items.length);
+            });
+            $.get("https://api.stackexchange.com/2.2/search?page=1&pagesize=100&fromdate=" + (nowSeconds - 21600).toString() + "&order=desc&sort=activity&tagged=" + tag + "&site=stackoverflow", function (response) {
+                console.log(response);
+                $("h1#6hour").text(response.items.length);
+            });
+            $.get("https://api.stackexchange.com/2.2/search?page=1&pagesize=100&fromdate=" + (nowSeconds - 86400).toString() + "&order=desc&sort=activity&tagged=" + tag + "&site=stackoverflow", function (response) {
+                console.log(response);
+                $("h1#24hour").text(response.items.length);
+            });
+
+            //$("h1").text(((iteration - 1) * 100) + items);
+        }
+    };
+</script>
