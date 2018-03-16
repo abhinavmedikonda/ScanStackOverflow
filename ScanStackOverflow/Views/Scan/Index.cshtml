@@ -5,38 +5,45 @@
 
 <h2>Index</h2>
 <div class="page-height">
-    <div class="col-xs-3">
-        <ul style="font-size:20px">
-            <li>active-directory</li>
-            <li>ruby-on-rails</li>
-            <li>android</li>
-            <li>ios</li>
-            <li>ajax</li>
-            <li>azure</li>
-            <li>perl</li>
-            <li>shell</li>
-            <li>asp.net-mvc</li>
-        </ul>
-    </div>
-    <div class="col-xs-6">
-        <div class="blocks">
-            <div class="form-group block" style="min-width:200px">
-                <input type="text" class="form-control" style="text-align: center"/>
-                <button class="btn-primary btn-lg">Get</button>
+    <div class="row">
+        <div class="col-xs-3">
+            <ul style="font-size:20px">
+                <li>active-directory</li>
+                <li>ruby-on-rails</li>
+                <li>android</li>
+                <li>ios</li>
+                <li>ajax</li>
+                <li>azure</li>
+                <li>perl</li>
+                <li>shell</li>
+                <li>asp.net-mvc</li>
+            </ul>
+        </div>
+        <div class="col-xs-6">
+            <div class="blocks">
+                <div class="form-group block" style="min-width:200px">
+                    <input type="text" class="form-control" style="text-align: center" />
+                    <button class="btn-primary btn-lg">Get</button>
+                </div>
+            </div>
+            <div class="blocks">
+                <div class="block">
+                    <h1 id="1hour"></h1>
+                </div>
+                <div class="block">
+                    <h1 id="6hour"></h1>
+                </div>
+                <div class="block">
+                    <h1 id="24hour"></h1>
+                </div>
             </div>
         </div>
-        <div class="blocks">
-            <div class="block">
-                <h1 id="1hour"></h1>
-            </div>
-            <div class="block">
-                <h1 id="6hour"></h1>
-            </div>
-            <div class="block">
-                <h1 id="24hour"></h1>
-            </div>
-        </div>
     </div>
+    <div class="row">
+        <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+    </div>
+    <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+    <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
 </div>
 <script type="text/javascript">
     window.onload = function () {
@@ -45,7 +52,7 @@
             $("input").val($(this).text());
             buttonClick();
         });
-        $("button").click(function () { buttonClick();});
+        $("button").click(function () { buttonClick(); });
 
         var buttonClick = function () {
             console.log($("input").val());
@@ -94,7 +101,44 @@
                 $("h1#24hour").text(response.items.length);
             });
 
-            //$("h1").text(((iteration - 1) * 100) + items);
+            var limit = 6;    //increase number of dataPoints by increasing the limit
+            var y = 0;
+            var data = [];
+            var dataSeries = { type: "line" };
+            var dataPoints = [];
+            var totalSeconds = Date.now().toString().slice(0, -3) - 86400;
+
+            for (var i = 0; i < limit; i++) {
+                $.ajax({
+                    url: "https://api.stackexchange.com/2.2/search?page=1&pagesize=100&fromdate=" + totalSeconds + "&todate=" + (totalSeconds + 14400).toString() + "&order=desc&sort=activity&tagged=" + tag + "&site=stackoverflow",
+                    success: function (response) {
+                        console.log(response);
+                        dataPoints.push({
+                            x: i + 1,
+                            y: response.items.length
+                        });
+                        totalSeconds += 14400;
+                        console.log(dataPoints);
+                    },
+                    async: false
+                })
+            }
+
+            //Better to construct options first and then pass it as a parameter
+            var options = {
+                animationEnabled: true,
+                title: {
+                    text: "Chart inside a jQuery Resizable Element"
+                },
+                data: [{
+                    type: "column", //change it to line, area, bar, pie, etc
+                    legendText: "Try Resizing with the handle to the bottom right",
+                    showInLegend: true,
+                    dataPoints: dataPoints
+                }]
+            };
+
+            $("#chartContainer").CanvasJSChart(options);
         }
     };
 </script>

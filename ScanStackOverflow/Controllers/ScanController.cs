@@ -16,5 +16,10 @@ namespace ScanStackOverflow.Controllers
 
             return View();
         }
+
+        public ActionResult Scan()
+        {
+            return View();
+        }
     }
 }
