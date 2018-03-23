@@ -23,7 +23,7 @@ textarea {
     max-width: 280px;
 }
 .page-height {
-    min-height: 70vh;
+    min-height: 80vh;
 }
 .blocks {
     display: flex;
@@ -38,10 +38,24 @@ textarea {
     font-size: 1.5rem;
     padding: 1rem .5rem;
     transition: all .07s ease;
-    width: 10rem;
-    min-height: 100px;
+    width: 25rem;
+    min-height: 250px;
     text-align: center;
     color: white;
-    background: rgba(0,0,0,0.4);
+    /*background: rgba(0,0,0,0.4);*/
     text-shadow: 0 0 .5rem black;
+}
+.list-item {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+    margin: 2px;
+    background-color: #ffffff;
+    border: 1px solid #dddddd;
+}
+.margin-left-20{
+    margin-left: 20px;
+}
+.display-inline{
+    display:inline;
 }

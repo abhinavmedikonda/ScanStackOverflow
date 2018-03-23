@@ -4501,8 +4501,11 @@ textarea.input-group-sm > .input-group-btn > .btn {
 }
 
 .navbar-inverse {
-  background-color: #222222;
-  border-color: #080808;
+  /*background-color: #222222;*/
+  background-color: #7D1935;
+  /*border-color: #080808;*/
+  border-color: grey;
+  border-bottom-width: 5px;
 }
 
 .navbar-inverse .navbar-brand {
